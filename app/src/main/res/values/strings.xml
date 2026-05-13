@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Candy Crush Game - Little App</string>
+
+    //Theme
+    <string name="basic_theme">Basic Theme</string>
+    <string name="sec_theme">Sec Theme</string>
+
+    <string name="candy_crush_game">Candy Crush Game</string>
+
 </resources>
