@@ -2,22 +2,25 @@ package com.littleapp.candycrushgame.Activity
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
-import android.util.DisplayMetrics
+import android.os.Looper
 import android.view.ViewGroup
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import com.littleapp.candycrushgame.Unit.OnSwipeListener
 import com.littleapp.candycrushgame.R
+import com.littleapp.candycrushgame.Unit.OnSwipeListener
 import com.littleapp.candycrushgame.Unit.THEME
 import com.littleapp.candycrushgame.databinding.ActivityMainBinding
-import java.util.Arrays
 import kotlin.math.floor
 
 class MainActivity : AppCompatActivity() {
 
-    private var binding: ActivityMainBinding? = null
+    private var _binding: ActivityMainBinding? = null
+    private val binding get() = _binding!!
+
     private val context: Context = this@MainActivity
     var candies = intArrayOf(
         R.drawable.bluecandy, R.drawable.greencandy, R.drawable.redcandy,
@@ -30,24 +33,27 @@ class MainActivity : AppCompatActivity() {
     var candyToBeDragged = 0
     var candyToBeReplaced = 0
     var notCandy = R.drawable.transparent
-    var mHandler = Handler()
+    var mHandler = Handler(Looper.getMainLooper())
     var interval = 100
     var score = 0
 
+    @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         THEME.setThemeOfApp(context)
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        val view = binding!!.root
-        setContentView(view)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        binding!!.toolbar.nameSpace.text = getString(R.string.candy_crush_game)
-        val displayMetrics = DisplayMetrics()
-        windowManager.defaultDisplay.getMetrics(displayMetrics)
-        widthOfScreen = displayMetrics.widthPixels
-        val hightOfScreen = displayMetrics.heightPixels
+        binding.toolbar.nameSpace.text = getString(R.string.candy_crush_game)
+
+        widthOfScreen = run {
+            val windowMetrics = windowManager.currentWindowMetrics
+            windowMetrics.bounds.width()
+        }
+
         widthOfBlock = widthOfScreen / noOfBlocks
+
 
         createBoard()
         for (imageView in candy) {
@@ -81,7 +87,6 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
-        mHandler = Handler()
         startRepeat()
     }
 
@@ -95,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                 var x = i
                 if (candy[x++].tag as Int == chooseCandy && !isBlank && candy[x++].tag as Int == chooseCandy && candy[x].tag as Int == chooseCandy) {
                     score += 3
-                    binding!!.toolbarScore.scoreList.text = score.toString()
+                    binding.toolbarScore.scoreList.text = score.toString()
                     candy[x].setImageResource(notCandy)
                     candy[x].tag = notCandy
                     x--
@@ -117,7 +122,7 @@ class MainActivity : AppCompatActivity() {
             var x = i
             if (candy[x].tag as Int == choosedCandy && !isBlank && candy[x + noOfBlocks].tag as Int == choosedCandy && candy[x + 2 * noOfBlocks].tag as Int == choosedCandy) {
                 score += 3
-                binding!!.toolbarScore.scoreList.text = score.toString()
+                binding.toolbarScore.scoreList.text = score.toString()
                 candy[x].setImageResource(notCandy)
                 candy[x].tag = notCandy
                 x += noOfBlocks
@@ -133,7 +138,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun moveDownCandies() {
         val firstRow = arrayOf(0, 1, 2, 3, 4, 5, 6, 7)
-        val list = Arrays.asList(*firstRow)
+        val list = listOf(*firstRow)
         for (i in 55 downTo 0) {
             if (candy[i + noOfBlocks].tag as Int == notCandy) {
                 candy[i + noOfBlocks].setImageResource(candy[i].tag as Int)
@@ -147,7 +152,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-        for (i in 0..-1) {
+        for (i in 0 until noOfBlocks) {
             if (candy[i].tag as Int == notCandy) {
                 val randomColor = floor(Math.random() * candies.size).toInt()
                 candy[i].setImageResource(candies[randomColor])
@@ -182,10 +187,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun createBoard() {
-        binding!!.board.rowCount = noOfBlocks
-        binding!!.board.columnCount = noOfBlocks
-        binding!!.board.layoutParams.width = widthOfScreen
-        binding!!.board.layoutParams.height = widthOfScreen
+        binding.board.rowCount = noOfBlocks
+        binding.board.columnCount = noOfBlocks
+        binding.board.layoutParams.width = widthOfScreen
+        binding.board.layoutParams.height = widthOfScreen
         for (i in 0 until noOfBlocks * noOfBlocks) {
             val imageView = ImageView(context)
             imageView.id = i
@@ -196,7 +201,13 @@ class MainActivity : AppCompatActivity() {
             imageView.setImageResource(candies[randomCandy])
             imageView.tag = candies[randomCandy]
             candy.add(imageView)
-            binding!!.board.addView(imageView)
+            binding.board.addView(imageView)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        mHandler.removeCallbacks(repeatChecker)
+        _binding = null
     }
 }
