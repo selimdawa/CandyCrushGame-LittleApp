@@ -1,4 +1,4 @@
-package com.littleapp.candycrushgame.Unit
+package com.littleapp.candycrushgame.utils
 
 import android.content.Context
 import android.content.Intent

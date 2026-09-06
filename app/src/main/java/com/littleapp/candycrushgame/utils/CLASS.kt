@@ -1,6 +1,6 @@
-package com.littleapp.candycrushgame.Unit
+package com.littleapp.candycrushgame.utils
 
-import com.littleapp.candycrushgame.Activity.*
+import com.littleapp.candycrushgame.activity.*
 
 object CLASS {
     val MAIN: Class<*> = MainActivity::class.java

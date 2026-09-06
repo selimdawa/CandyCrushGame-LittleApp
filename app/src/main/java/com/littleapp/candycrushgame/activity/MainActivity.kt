@@ -1,4 +1,4 @@
-package com.littleapp.candycrushgame.Activity
+package com.littleapp.candycrushgame.activity
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,14 +8,14 @@ import android.os.Handler
 import android.os.Looper
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.annotation.RequiresApi
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.littleapp.candycrushgame.R
-import com.littleapp.candycrushgame.Unit.OnSwipeListener
-import com.littleapp.candycrushgame.Unit.THEME
+import com.littleapp.candycrushgame.utils.OnSwipeListener
+import com.littleapp.candycrushgame.utils.THEME
 import com.littleapp.candycrushgame.databinding.ActivityMainBinding
 import kotlin.math.floor
 
@@ -26,8 +26,12 @@ class MainActivity : AppCompatActivity() {
 
     private val context: Context = this@MainActivity
     var candies = intArrayOf(
-        R.drawable.bluecandy, R.drawable.greencandy, R.drawable.redcandy,
-        R.drawable.orangecandy, R.drawable.yellowcandy, R.drawable.purplecandy
+        R.drawable.bluecandy,
+        R.drawable.greencandy,
+        R.drawable.redcandy,
+        R.drawable.orangecandy,
+        R.drawable.yellowcandy,
+        R.drawable.purplecandy
     )
     var widthOfBlock = 0
     var noOfBlocks = 8
@@ -39,6 +43,7 @@ class MainActivity : AppCompatActivity() {
     var mHandler = Handler(Looper.getMainLooper())
     var interval = 100
     var score = 0
+    private var isRepeatStarted = false
 
     @RequiresApi(Build.VERSION_CODES.R)
     @SuppressLint("ClickableViewAccessibility")
@@ -97,18 +102,17 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
-        startRepeat()
     }
 
     private fun checkRowForThree() {
         for (i in 0..61) {
-            val chooseCandy = candy[i].tag as Int
+            val chosenCandy = candy[i].tag as Int
             val isBlank = candy[i].tag as Int == notCandy
             val notValid = arrayOf(6, 7, 14, 15, 22, 23, 30, 31, 38, 39, 46, 47, 54, 55)
             val list = listOf(*notValid)
             if (!list.contains(i)) {
                 var x = i
-                if (candy[x++].tag as Int == chooseCandy && !isBlank && candy[x++].tag as Int == chooseCandy && candy[x].tag as Int == chooseCandy) {
+                if (candy[x++].tag as Int == chosenCandy && !isBlank && candy[x++].tag as Int == chosenCandy && candy[x].tag as Int == chosenCandy) {
                     score += 3
                     binding.toolbarScore.scoreList.text = score.toString()
                     candy[x].setImageResource(notCandy)
@@ -127,10 +131,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun checkColumnForThree() {
         for (i in 0..46) {
-            val choosedCandy = candy[i].tag as Int
+            val chosenCandy = candy[i].tag as Int
             val isBlank = candy[i].tag as Int == notCandy
             var x = i
-            if (candy[x].tag as Int == choosedCandy && !isBlank && candy[x + noOfBlocks].tag as Int == choosedCandy && candy[x + 2 * noOfBlocks].tag as Int == choosedCandy) {
+            if (candy[x].tag as Int == chosenCandy && !isBlank && candy[x + noOfBlocks].tag as Int == chosenCandy && candy[x + 2 * noOfBlocks].tag as Int == chosenCandy) {
                 score += 3
                 binding.toolbarScore.scoreList.text = score.toString()
                 candy[x].setImageResource(notCandy)
@@ -184,7 +188,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun startRepeat() {
-        repeatChecker.run()
+        if (!isRepeatStarted) {
+            isRepeatStarted = true
+            repeatChecker.run()
+        }
     }
 
     private fun candyInterChange() {
@@ -194,6 +201,7 @@ class MainActivity : AppCompatActivity() {
         candy[candyToBeReplaced].setImageResource(background2)
         candy[candyToBeDragged].tag = background
         candy[candyToBeReplaced].tag = background2
+        startRepeat()
     }
 
     private fun createBoard() {

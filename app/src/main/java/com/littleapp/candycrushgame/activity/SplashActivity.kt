@@ -1,4 +1,4 @@
-package com.littleapp.candycrushgame.Activity
+package com.littleapp.candycrushgame.activity
 
 import android.content.Context
 import android.os.Bundle
@@ -8,9 +8,9 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.littleapp.candycrushgame.Unit.CLASS
-import com.littleapp.candycrushgame.Unit.THEME
-import com.littleapp.candycrushgame.Unit.VOID
+import com.littleapp.candycrushgame.utils.CLASS
+import com.littleapp.candycrushgame.utils.THEME
+import com.littleapp.candycrushgame.utils.VOID
 import com.littleapp.candycrushgame.databinding.ActivitySplashBinding
 
 class SplashActivity : AppCompatActivity() {
