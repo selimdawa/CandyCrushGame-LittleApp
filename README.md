@@ -1,4 +1,4 @@
-<h1 align="center">Candy Crush Game - Little App</h1>
+﻿<h1 align="center">Candy Crush Game - Little App</h1>
 
 <p align="center">
  <a><img alt="Min SDK" src="https://img.shields.io/badge/Min SDK-24-020290?logo=android&logoColor=white"/></a>
@@ -13,7 +13,7 @@ One | Two | Three
 ![](https://raw.githubusercontent.com/selimdawa/SimpleMultiAppsKotlin/main/UI/10.jpg) | ![](https://raw.githubusercontent.com/selimdawa/SimpleMultiAppsKotlin/main/UI/11.jpg) | ![](https://raw.githubusercontent.com/selimdawa/SimpleMultiAppsKotlin/main/UI/12.jpg) | 
 
 - [Simple Multi Apps - Kotlin](https://github.com/selimdawa/SimpleMultiAppsKotlin/)
-
+- [Simple Compose Apps - Kotlin](https://github.com/selimdawa/SimpleComposeApps/)
 
 ---
 
